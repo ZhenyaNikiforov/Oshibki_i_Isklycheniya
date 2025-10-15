@@ -1,18 +1,13 @@
 #include <iostream>
+#include <Windows.h>
 
 int function(std::string str, int forbidden_length)
 {
-  try
+  SetConsoleOutputCP(CP_UTF8);
+  if (str.length() == forbidden_length)
   {
-    if (str.length() == forbidden_length)
-    {
-      throw std::exception();
-    };
-  }
-  catch (const std::exception &e)
-  {
-    return -1;
-  }
+    throw std::invalid_argument("Слово непредусмотренной длины. Завершение.");
+  };
 
   return str.length();
 };
@@ -29,13 +24,18 @@ int main()
   {
     std::cout << "Vvedite slovo: ";
     std::cin >> word;
-    int result = function(word, forbiddenLength);
-    if (result == -1)
+
+    try
     {
-      std::cout << "Slovo zapretnoj dlinyi!\n";
+      function(word, forbiddenLength);
+    }
+    catch (const std::invalid_argument &e)
+    {
+      std::cout << e.what() << std::endl;
       break;
     };
-    std::cout << "Dlina slova \"" << word << "\" ravna " << result << std::endl;
+
+    std::cout << "Dlina slova \"" << word << "\" ravna " << function(word, forbiddenLength) << std::endl;
   };
   return 0;
 };
